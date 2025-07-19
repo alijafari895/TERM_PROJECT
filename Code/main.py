@@ -61,7 +61,7 @@ def create_supplier(supplier: Supplier):
     conn.close()
     return {"id": supplier_id, **supplier.dict()}
 
-#Add posr for req
+#Add post for req
 @app.post("/Addreq/")
 def add_req( req : Addreq):
     conn = sqlite3.connect("suppliers.db")
