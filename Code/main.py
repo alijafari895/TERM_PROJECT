@@ -49,7 +49,11 @@ def create_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
 @app.get("/suppliers/", response_model=list[SupplierResponse])
 def list_suppliers(db: Session = Depends(get_db)):
     return db.query(Supplier).filter(Supplier.is_active == True).all()
-    
+
+@app.put("/suppliers/{supplier_id}")
+def deactivate_supplier(supplier_id: int, db: Session = Depends(get_db)):
+
+
 
 
 
