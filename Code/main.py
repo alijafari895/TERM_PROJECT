@@ -49,26 +49,5 @@ class Addreq(BaseModel):
     Suppliername: str
     TIME: str
 
-# Add post for supplier
-@app.post("/suppliers/") 
-def create_supplier(supplier: Supplier):
-    conn = sqlite3.connect("suppliers.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO Suppliers (name, email, phone) VALUES (?, ?, ?)",
-                   (supplier.Name, supplier.Email, supplier.Phone))
-    conn.commit()
-    supplier_id = cursor.lastrowid
-    conn.close()
-    return {"id": supplier_id, **supplier.dict()}
 
-#Add post for req
-@app.post("/Addreq/")
-def add_req( req : Addreq):
-    conn = sqlite3.connect("suppliers.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO SUPPLIERS (Productname , Suppliername , TIME) VALUE (? , ? ,?)" ,
-                   (req.Productname , req.Suppliername , req.TIME))
-    conn.commit()
-    req_id = cursor.lastrowid
-    conn.close()
-    return {"id" : req_id, **req.dict()}
+
