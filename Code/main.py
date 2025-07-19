@@ -46,5 +46,9 @@ def create_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
     db.refresh(new_supplier)
     return new_supplier
 
+@app.get("/suppliers/", response_model=list[SupplierResponse])
+def list_suppliers(db: Session = Depends(get_db)):
+
+
 
 
