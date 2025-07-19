@@ -7,7 +7,7 @@ from model import Supplier , Base
 from databse import engine , SessionLocal
 
 #make engine
-Base.metadaa.creat_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 #make app
 app = FastAPI()
