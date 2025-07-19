@@ -25,7 +25,7 @@ class SupplierCreate(BaseModel):
     name: str
     email: EmailStr
     contact: str | None = None
-    delivery_days = int
+    delivery_days : int
 
 #make acceptable value for active or not
 class SupplierResponse(SupplierCreate):
