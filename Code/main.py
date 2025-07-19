@@ -38,5 +38,8 @@ class SupplierResponse(SupplierCreate):
 # add post
 @app.post("/suppliers/", response_model=SupplierResponse)
 def create_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
-    
+    if db.query(Supplier).filter(Supplier.email == supplier.email).first():
+    raise HTTPException(status_code=400, detail="Duplicate email.")
+
+
 
