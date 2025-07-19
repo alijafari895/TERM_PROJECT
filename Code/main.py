@@ -37,12 +37,17 @@ def init_addreq():
 
     """)
 
-#Made accepteable value for curl
+#Made accepteable value for supplier curl
 class Supplier(BaseModel):
-    name: str
-    email: str
-    phone: str | None = None
+    Name: str
+    Email: str
+    Phone: str | None = None
 
+#Made accepteable value for Addreq curl
+class Addreq(BaseModel):
+    Productname: str
+    Suppliername: str
+    TIME: str
 
 # Add post for supplier
 @app.post("/suppliers/") 
@@ -50,9 +55,20 @@ def create_supplier(supplier: Supplier):
     conn = sqlite3.connect("suppliers.db")
     cursor = conn.cursor()
     cursor.execute("INSERT INTO Suppliers (name, email, phone) VALUES (?, ?, ?)",
-                   (supplier.name, supplier.email, supplier.phone))
+                   (supplier.Name, supplier.Email, supplier.Phone))
     conn.commit()
     supplier_id = cursor.lastrowid
     conn.close()
     return {"id": supplier_id, **supplier.dict()}
 
+#Add posr for req
+@app.post("/Addreq/")
+def add_req( req : Addreq):
+    conn = sqlite3.connect("suppliers.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO SUPPLIERS (Productname , Suppliername , TIME) VALUE (? , ? ,?)" ,
+                   (req.Productname , req.Suppliername , req.TIME))
+    conn.commit()
+    req_id = cursor.lastrowid
+    conn.close()
+    return {"id" : req_id, **req.dict()}
