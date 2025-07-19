@@ -21,18 +21,22 @@ def get_db():
         db.close()
 
 #make acceptable value for supplier
-class SupplierCreat(BaseModel):
+class SupplierCreate(BaseModel):
     name: str
     email: EmailStr
     contact: str | None = None
     delivery_days = int
 
 #make acceptable value for active or not
-class Supplierresponse(SupplierCreat):
+class SupplierResponse(SupplierCreate):
     id: int
     is_active: bool
 
     class Config:
         orm_mode = True
 
+# add post
+@app.post("/suppliers/", response_model=SupplierResponse)
+def create_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
+    
 
