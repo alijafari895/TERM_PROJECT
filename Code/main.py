@@ -52,6 +52,10 @@ def list_suppliers(db: Session = Depends(get_db)):
 
 @app.put("/suppliers/{supplier_id}")
 def deactivate_supplier(supplier_id: int, db: Session = Depends(get_db)):
+    supplier = db.query(Supplier).get(supplier_id)
+if not supplier:
+    raise HTTPException(status_code=404, detail="Supplier not found.")
+
 
 
 
