@@ -15,3 +15,16 @@ def get_db():
         yield db
     finally:
         db.close()
+
+class SupplierCreat(BaseModel):
+    name: str
+    email: EmailStr
+    contact: str | None = None
+    delivery_days = int
+
+class Supplierresponse(SupplierCreat):
+    id: int
+    is_active: bool
+
+    class Config:
+        orm_mode = True
