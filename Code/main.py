@@ -2,9 +2,11 @@
 from fastapi import FastAPI , HTTPException , Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel , EmailStr
-
+from pydantic import Field
 from model import Supplier , Base
 from databse import engine , SessionLocal
+from typing import Optional
+
 
 #make engine
 Base.metadata.create_all(bind=engine)
@@ -35,7 +37,14 @@ class SupplierResponse(SupplierCreate):
     class Config:
         orm_mode = True
 
-# add post
+#for changing info
+class SupplierUpdate(BaseModel):
+    name: Optional[str] = Field(None)
+    email: Optional[EmailStr] = Field(None)
+    contact: Optional[str] = Field(None)
+    delivery_time_days: Optional[int] = Field(None)
+
+#add post
 @app.post("/suppliers/", response_model=SupplierResponse)
 def create_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
     if db.query(Supplier).filter(Supplier.email == supplier.email).first():
@@ -45,11 +54,12 @@ def create_supplier(supplier: SupplierCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_supplier)
     return new_supplier
-
+#add get supplier
 @app.get("/suppliers/", response_model=list[SupplierResponse])
 def list_suppliers(db: Session = Depends(get_db)):
     return db.query(Supplier).filter(Supplier.is_active == True).all()
 
+#add put supplier
 @app.put("/suppliers/{supplier_id}")
 def deactivate_supplier(supplier_id: int, db: Session = Depends(get_db)):
     supplier = db.query(Supplier).get(supplier_id)
@@ -58,6 +68,31 @@ def deactivate_supplier(supplier_id: int, db: Session = Depends(get_db)):
     supplier.is_active = False
     db.commit()
     return {"message": "Supplier deactivated."}
+
+#change info add put
+@app.put("/suppliers/{supplier_id}/edit", response_model=SupplierResponse)
+def update_supplier_info(supplier_id: int, update: SupplierUpdate, db: Session = Depends(get_db)):
+    supplier = db.query(Supplier).get(supplier_id)
+    if not supplier:
+        raise HTTPException(status_code=404, detail="not found")
+    for field, value in update.dict(exclude_unset=True).items():
+        setattr(supplier, field, value)
+    db.commit()
+    db.refresh(supplier)
+    return supplier
+
+#add delete supplier
+@app.delete("/suppliers/{suppliers_id}")
+def delete_supplier(supplier_id: int , db:Session = Depends(get_db)):
+    supplier = db.query(Supplier).get(supplier_id)
+    if not supplier:
+        raise HTTPException(status_code=404, detail="Supplier not found.")
+    db.delete(supplier)
+    db.commit
+    return {"message" : "Supplier Deleted"}
+
+
+        
 
 
 
