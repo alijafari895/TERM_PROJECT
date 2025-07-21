@@ -74,7 +74,7 @@ def deactivate_supplier(supplier_id: int, db: Session = Depends(get_db)):
 def update_supplier_info(supplier_id: int, update: SupplierUpdate, db: Session = Depends(get_db)):
     supplier = db.query(Supplier).get(supplier_id)
     if not supplier:
-        raise HTTPException(status_code=404, detail="not found")
+        raise HTTPException(status_code=404, detail="Not Found")
     for field, value in update.dict(exclude_unset=True).items():
         setattr(supplier, field, value)
     db.commit()
