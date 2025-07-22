@@ -40,7 +40,10 @@ class order(BaseModel):
     order_status: orderStatus = orderStatus.draft
 
 class orderCreate(BaseModel):
-    pass
+    product_name: str
+    quantity: int
+    supplier_id: int
+    order_status: orderStatus = orderStatus.draft
 
 class orderResponse(order):
     class Config:

@@ -59,4 +59,15 @@ def delete_supplier(supplier_id: int , db:Session = Depends(get_db)):
     db.commit
     return {"message" : "Supplier Deleted"}
 
+@router.post("/", response_model=schema.orderResponse)
+def create_order(order: schema.orderCreate, db: Session = Depends(get_db)):
+    db_order = model.place_order(**order.dict())
+    db.add(db_order)
+    db.commit()
+    db.refresh(db_order)
+    return db_order
+
+@router.get("/", response_model=list[schema.orderResponse])
+def list_orders(db: Session = Depends(get_db)):
+    return db.query(model.place_order).all()
 
