@@ -26,4 +26,22 @@ class SupplierUpdate(BaseModel):
     contact: Optional[str] = Field(None)
     delivery_time_days: Optional[int] = Field(None)
 
+class orderStatus(str, Enum):
+    draft = "draft"
+    sent = "sent"
+    received = "received"
+    closed = "closed"
 
+class order(BaseModel):
+    id: int
+    product_name: str
+    quantity: int
+    supplier_id: int
+    order_status: orderStatus = orderStatus.draft
+
+class orderCreate(BaseModel):
+    pass
+
+class orderResponse(order):
+    class Config:
+        orm_mode = True

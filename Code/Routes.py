@@ -7,7 +7,8 @@ from model import Supplier , Base
 from databse import engine , SessionLocal
 from typing import Optional
 from schema import SupplierCreate , SupplierResponse , SupplierUpdate
-from databse import get_db  
+from databse import get_db 
+import schema , model  
 
 router = APIRouter(prefix="/suppliers", tags=["Suppliers"])
 

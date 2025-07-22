@@ -2,7 +2,7 @@ from sqlalchemy import Column , Integer , String , Boolean , ForeignKey , Enum a
 from sqlalchemy.ext.declarative import declarative_base
 from enum import Enum
 from sqlalchemy import Column, Enum as SqlEnum
-from databse import Base
+
 from sqlalchemy.orm import relationship
 
 
@@ -34,5 +34,6 @@ class place_order(Base):
     status = Column(SqlEnum(OrderStatus), default=OrderStatus.draft)
 
     Supplier = relationship("Supplier")
+
 
     
