@@ -1,5 +1,10 @@
-from sqlalchemy import Column , Integer , String , Boolean
+from sqlalchemy import Column , Integer , String , Boolean , ForeignKey , Enum as SqlEnum
 from sqlalchemy.ext.declarative import declarative_base
+from enum import Enum
+from sqlalchemy import Column, Enum as SqlEnum
+from databse import Base
+from sqlalchemy.orm import relationship
+
 
 Base = declarative_base()
 
@@ -13,8 +18,21 @@ class Supplier(Base):
     delivery_days = Column( Integer )
     is_active =     Column( Boolean , default=True )
 
-class order(Base):
-    __tablename__ = "order"
 
-    id = Column( Integer , primary_key=True , index=True )
+class OrderStatus(str, Enum):
+    draft = "draft"
+    sent = "sent"
+    received = "received"
+    closed = "closed"
+
+class place_order(Base):
+    __tablename__ = "orders"
+    id = Column(Integer, primary_key=True, index=True)
+    Supplier_id = Column(Integer, ForeignKey("suppliers.id"))
+    product_name = Column(String, nullable=False)
+    quantity = Column(Integer, nullable=False)
+    status = Column(SqlEnum(OrderStatus), default=OrderStatus.draft)
+
+    Supplier = relationship("Supplier")
+
     

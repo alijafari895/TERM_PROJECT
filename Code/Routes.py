@@ -57,3 +57,5 @@ def delete_supplier(supplier_id: int , db:Session = Depends(get_db)):
     db.delete(supplier)
     db.commit
     return {"message" : "Supplier Deleted"}
+
+

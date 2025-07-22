@@ -2,6 +2,7 @@ from model import Supplier , Base
 from pydantic import BaseModel , EmailStr
 from typing import Optional
 from pydantic import Field
+from enum import Enum
 
 #make acceptable value for supplier
 class SupplierCreate(BaseModel):
@@ -24,3 +25,5 @@ class SupplierUpdate(BaseModel):
     email: Optional[EmailStr] = Field(None)
     contact: Optional[str] = Field(None)
     delivery_time_days: Optional[int] = Field(None)
+
+
