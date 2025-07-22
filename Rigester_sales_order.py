@@ -3,9 +3,11 @@ import sqlite3
 
 router = APIRouter()
 
+#Checking if there is enough in our inventory or not
 def check_inventory(number, inventory):
     return True if number <= inventory[0] else False
 
+#Register orders
 @router.post('/Dashboard/Register_orders', tags=['Register_orders'])
 def register_orders(name: str, number: int=1):    
     with sqlite3.connect('Product_info.db') as conn:
@@ -15,6 +17,7 @@ def register_orders(name: str, number: int=1):
         
         if inventory:
             if check_inventory(number, inventory):
+                #Update database(Reduce number of items sold)
                cur.execute('UPDATE product SET Inventory = Inventory - ? WHERE name=?', (number, name)) 
                conn.commit()
                return{"Result": "Ordered registered seccessfully!"}
