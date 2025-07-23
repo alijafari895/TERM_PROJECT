@@ -1,30 +1,24 @@
-from model import Supplier , Base
-from pydantic import BaseModel , EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
-from pydantic import Field
 from enum import Enum
 
-#make acceptable value for supplier
 class SupplierCreate(BaseModel):
     name: str
     email: EmailStr
-    contact: str | None = None
-    delivery_days : int
+    contact: Optional[str] = None
+    delivery_days: int
 
-#make acceptable value for active or not
 class SupplierResponse(SupplierCreate):
     id: int
     is_active: bool
-
     class Config:
         orm_mode = True
 
-#for changing info
 class SupplierUpdate(BaseModel):
-    name: Optional[str] = Field(None)
-    email: Optional[EmailStr] = Field(None)
-    contact: Optional[str] = Field(None)
-    delivery_time_days: Optional[int] = Field(None)
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    contact: Optional[str] = None
+    delivery_days: Optional[int] = None
 
 class orderStatus(str, Enum):
     draft = "draft"
@@ -37,7 +31,7 @@ class order(BaseModel):
     product_name: str
     quantity: int
     supplier_id: int
-    order_status: orderStatus = orderStatus.draft
+    order_status: orderStatus
 
 class orderCreate(BaseModel):
     product_name: str
