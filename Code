@@ -1,0 +1,66 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from typing import Dict
+from datetime import datetime
+
+# واردات از فایل‌های پروژه
+from database import get_db
+from auth import get_current_user
+from models import Product, PurchaseOrder
+
+# مدل خروجی گزارش
+from pydantic import BaseModel
+
+class DashboardReport(BaseModel):
+    total_products: int
+    low_stock_products: int
+    total_orders: int
+    orders_by_status: Dict[str, int]
+    generated_at: datetime
+
+# router گزارش
+router = APIRouter(
+    prefix="/reports",
+    tags=["Reports"]
+)
+
+@router.get("/dashboard", response_model=DashboardReport)
+def get_dashboard(
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    دریافت گزارش داشبورد برای مدیران
+    """
+    # فقط کاربران با نقش admin می‌توانند این گزارش را ببینند
+    if current_user.get("role") != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="دسترسی محدود به مدیران"
+        )
+
+    # 1. تعداد کل کالاها
+    total_products = db.query(Product).count()
+
+    # 2. تعداد کالاهای با موجودی کم (quantity < min_threshold)
+    low_stock_products = db.query(Product).filter(
+        Product.quantity < Product.min_threshold
+    ).count()
+
+    # 3. تعداد کل سفارشات
+    total_orders = db.query(PurchaseOrder).count()
+
+    # 4. آمار سفارشات بر اساس وضعیت
+    order_statuses = ["Draft", "Sent", "Received", "Closed"]
+    orders_by_status = {}
+    for status_name in order_statuses:
+        count = db.query(PurchaseOrder).filter(PurchaseOrder.status == status_name).count()
+        orders_by_status[status_name] = count
+
+    return {
+        "total_products": total_products,
+        "low_stock_products": low_stock_products,
+        "total_orders": total_orders,
+        "orders_by_status": orders_by_status,
+        "generated_at": datetime.utcnow()
+    }
