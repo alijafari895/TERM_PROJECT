@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import PM_get
+import Rigester_sales_order
 import sqlite3
 
 class Product_info(BaseModel):
@@ -14,6 +15,7 @@ class Product_info(BaseModel):
 
 app = FastAPI()
 app.include_router(PM_get.router, prefix='/Dashboard', tags=['Product_management'])
+app.include_router(Rigester_sales_order.router, prefix='/Dashboard')
 
 @app.post('/Dashboard/add_products', tags=['Product_management', 'add_product'])
 
