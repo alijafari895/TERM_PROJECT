@@ -1,6 +1,5 @@
-
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 
 class SaleItem(BaseModel):
     sku: str
@@ -13,7 +12,8 @@ class SaleCreate(BaseModel):
 class SaleResponse(BaseModel):
     id: int
     customer_id: Optional[int]
-    items: List[Dict[str, Any]]
+    items: List[SaleItem]  # تغییر داده شد تا با جدول SaleItem مطابقت داشته باشد
     total: float
+
     class Config:
         orm_mode = True
