@@ -12,7 +12,7 @@ class SaleCreate(BaseModel):
 class SaleResponse(BaseModel):
     id: int
     customer_id: Optional[int]
-    items: List[SaleItem]  # تغییر داده شد تا با جدول SaleItem مطابقت داشته باشد
+    items: List[SaleItem] 
     total: float
 
     class Config:

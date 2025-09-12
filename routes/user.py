@@ -10,7 +10,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 @router.post("/signup", response_model=UserResponse)
 def signup(payload: UserCreate, db: Session = Depends(get_db)):
-    # check uniqueness
+
     if db.query(User).filter((User.username == payload.username) | (User.email == payload.email)).first():
         raise HTTPException(status_code=400, detail="Username or email already exists")
     hashed = get_password_hash(payload.password)

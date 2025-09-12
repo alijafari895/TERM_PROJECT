@@ -26,7 +26,7 @@ class PurchaseOrderUpdate(BaseModel):
 class PurchaseOrderResponse(BaseModel):
     id: int
     supplier_id: int
-    items: List[OrderItem]  # تغییر داده شد تا با جدول PurchaseOrderItem مطابقت داشته باشد
+    items: List[OrderItem]  
     status: OrderStatus
     created_at: datetime
     received_at: Optional[datetime]

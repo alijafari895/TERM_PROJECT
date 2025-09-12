@@ -9,7 +9,7 @@ from datetime import datetime
 
 router = APIRouter(prefix="/purchase-orders", tags=["PurchaseOrders"])
 
-# Create order
+
 @router.post("/", response_model=PurchaseOrderResponse)
 def create_order(payload: PurchaseOrderCreate, db: Session = Depends(get_db)):
     supplier = db.query(Supplier).get(payload.supplier_id)
@@ -21,7 +21,7 @@ def create_order(payload: PurchaseOrderCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(order)
 
-    # Insert items into PurchaseOrderItem table
+
     for it in payload.items:
         item = PurchaseOrderItem(
             order_id=order.id,
@@ -34,12 +34,12 @@ def create_order(payload: PurchaseOrderCreate, db: Session = Depends(get_db)):
     db.refresh(order)
     return order
 
-# List orders
+
 @router.get("/", response_model=list[PurchaseOrderResponse])
 def list_orders(db: Session = Depends(get_db)):
     return db.query(PurchaseOrder).all()
 
-# Update order
+
 @router.put("/{order_id}", response_model=PurchaseOrderResponse)
 def update_order(order_id: int, payload: PurchaseOrderUpdate, db: Session = Depends(get_db)):
     order = db.query(PurchaseOrder).get(order_id)
@@ -59,6 +59,7 @@ def update_order(order_id: int, payload: PurchaseOrderUpdate, db: Session = Depe
 
     # handle received transition
     if old_status != order.status and order.status == OrderStatus.received:
+        _ = order.items  
         # increase inventory based on items
         for it in order.items:
             product = db.query(Product).filter(Product.sku == it.sku).first()
@@ -69,7 +70,7 @@ def update_order(order_id: int, payload: PurchaseOrderUpdate, db: Session = Depe
         db.add(order)
         db.commit()
 
-    # Update supplier rating if delivery_time provided
+
     if order.delivery_time_days is not None and order.supplier and order.delivery_time_days > 0:
         supplier = order.supplier
         score = max(0, min(5, 5 - (order.delivery_time_days / 7)))
