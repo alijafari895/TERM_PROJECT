@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Management System - Dark Mode</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+  body { background: #121212; color: #e0e0e0; }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* Top Navbar */
+  nav { background: #1f1f1f; color: #fff; display: flex; padding: 10px 20px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #333; }
+  nav h2 { font-size: 1.5rem; }
+  .nav-links { display: flex; gap: 15px; }
+  .nav-links a { padding: 8px 12px; border-radius: 6px; transition: background 0.3s; cursor: pointer; color: #e0e0e0; }
+  .nav-links a.active, .nav-links a:hover { background: #4CAF50; color: #fff; }
+
+  /* Menu toggle for mobile */
+  .menu-toggle { display: none; cursor: pointer; font-size: 1.5rem; color: #fff; }
+  @media(max-width:768px){
+    .nav-links { flex-direction: column; display: none; width: 100%; background: #1f1f1f; position: absolute; top: 50px; left: 0; border-top: 1px solid #333; }
+    .nav-links.show { display: flex; }
+    .menu-toggle { display: block; }
+  }
+
+  .container { padding: 20px; max-width: 1200px; margin: auto; }
+
+  /* Cards */
+  .card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .card { background: #1f1f1f; color: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+  .card h3 { margin-bottom: 10px; }
+  .card p { font-size: 1.2rem; font-weight: 500; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+  th, td { padding: 12px 15px; text-align: left; }
+  th { background: #2e2e2e; color: #fff; }
+  td { background: #1f1f1f; }
+  tr:nth-child(even) td { background: #272727; }
+  table { border-radius: 8px; overflow: hidden; }
+
+  /* Forms */
+  form { background: #1f1f1f; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); max-width: 500px; margin: 40px auto; }
+  form h3 { margin-bottom: 20px; text-align: center; }
+  form input, form select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #272727; color: #e0e0e0; }
+  form input::placeholder { color: #bbb; }
+  form button { width: 100%; padding: 12px; background: #4CAF50; border: none; color: #fff; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background 0.3s; }
+  form button:hover { background: #388E3C; }
+
+  /* Sections */
+  section { display: none; }
+  section.active { display: block; }
+
+  /* Sign In */
+  .signin-container { display: flex; justify-content: center; align-items: center; height: 100vh; }
+  .signin-card { background: #1f1f1f; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 350px; }
+  .signin-card h2 { margin-bottom: 20px; text-align: center; color: #fff; }
+  .signin-card input { background: #272727; color: #e0e0e0; border: 1px solid #333; }
+  .signin-card button { background: #4CAF50; }
+
+  /* Buttons small */
+  .btn-small { padding: 6px 12px; font-size: 0.9rem; margin-right:5px; background: #4CAF50; border: none; color: #fff; border-radius: 6px; cursor: pointer; }
+  .btn-small:hover { background: #388E3C; }
+</style>
+</head>
+<body>
+
+<!-- Sign In Page -->
+<div class="signin-container" id="signinPage">
+  <div class="signin-card">
+    <h2>Sign In</h2>
+    <form id="loginForm">
+      <input type="text" placeholder="Username" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div id="mainLayout" style="display:none;">
+  <nav>
+    <h2>Inventory</h2>
+    <span class="menu-toggle">&#9776;</span>
+    <div class="nav-links">
+      <a class="nav-link active" data-target="dashboard">Dashboard</a>
+      <a class="nav-link" data-target="products">Products</a>
+      <a class="nav-link" data-target="suppliers">Suppliers</a>
+      <a class="nav-link" data-target="purchaseOrders">Purchase Orders</a>
+      <a class="nav-link" data-target="salesOrders">Sales Orders</a>
+      <a class="nav-link" data-target="reports">Reports</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Dashboard -->
+    <section id="dashboard" class="active">
+      <div class="card-container">
+        <div class="card"><h3>Total Products</h3><p>120</p></div>
+        <div class="card"><h3>Total Orders</h3><p>45</p></div>
+        <div class="card"><h3>Low Stock</h3><p>8</p></div>
+        <div class="card"><h3>Suppliers</h3><p>15</p></div>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section id="products">
+      <form id="productForm">
+        <h3>Add Product</h3>
+        <input type="text" placeholder="Product Name" required>
+        <input type="text" placeholder="SKU" required>
+        <input type="number" placeholder="Price" required>
+        <input type="number" placeholder="Stock Quantity" required>
+        <select>
+          <option>Category 1</option>
+          <option>Category 2</option>
+        </select>
+        <button type="submit">Add Product</button>
+      </form>
+      <table id="productTable">
+        <thead>
+          <tr><th>Product</th><th>SKU</th><th>Price</th><th>Stock</th><th>Category</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Keyboard</td><td>KB123</td><td>$25</td><td>50</td><td>Accessories</td>
+            <td><button class="btn-small">Edit</button><button class="btn-small">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Suppliers -->
+    <section id="suppliers">
+      <form id="supplierForm">
+        <h3>Add Supplier</h3>
+        <input type="text" placeholder="Supplier Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="text" placeholder="Phone" required>
+        <input type="text" placeholder="Delivery Time" required>
+        <button type="submit">Add Supplier</button>
+      </form>
+      <table id="supplierTable">
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Phone</th><th>Delivery Time</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ABC Co.</td><td>abc@example.com</td><td>123456789</td><td>3 days</td>
+          <td><button class="btn-small">Edit</button><button class="btn-small">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Purchase Orders -->
+    <section id="purchaseOrders">
+      <form id="purchaseForm">
+        <h3>Add Purchase Order</h3>
+        <input type="text" placeholder="Product Name" required>
+        <input type="number" placeholder="Quantity" required>
+        <select>
+          <option>Supplier 1</option>
+          <option>Supplier 2</option>
+        </select>
+        <button type="submit">Add Order</button>
+      </form>
+      <table id="purchaseTable">
+        <thead>
+          <tr><th>Product</th><th>Quantity</th><th>Supplier</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Keyboard</td><td>20</td><td>ABC Co.</td><td>Draft</td>
+          <td><button class="btn-small">Edit</button><button class="btn-small">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Sales Orders -->
+    <section id="salesOrders">
+      <form id="salesForm">
+        <h3>Add Sales Order</h3>
+        <input type="text" placeholder="Product Name" required>
+        <input type="number" placeholder="Quantity" required>
+        <button type="submit">Add Order</button>
+      </form>
+      <table id="salesTable">
+        <thead>
+          <tr><th>Product</th><th>Quantity</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Mouse</td><td>10</td>
+          <td><button class="btn-small">Edit</button><button class="btn-small">Delete</button></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Reports -->
+    <section id="reports">
+      <div class="card-container">
+        <div class="card"><h3>Low Stock</h3><p>8 Products</p></div>
+        <div class="card"><h3>Top Selling</h3><p>Keyboard</p></div>
+        <div class="card"><h3>Best Supplier</h3><p>ABC Co.</p></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // Simulate login
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('signinPage').style.display = 'none';
+    document.getElementById('mainLayout').style.display = 'block';
+  });
+
+  // Navbar toggle for mobile
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navLinks = document.querySelector('.nav-links');
+  menuToggle.addEventListener('click', () => navLinks.classList.toggle('show'));
+
+  // Navigation
+  const links = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('main section, .container section');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      links.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      const target = link.getAttribute('data-target');
+      sections.forEach(sec => sec.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  // Add Product
+  document.getElementById('productForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const table = document.getElementById('productTable').querySelector('tbody');
+    const inputs = e.target.querySelectorAll('input, select');
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${inputs[0].value}</td><td>${inputs[1].value}</td><td>$${inputs[2].value}</td><td>${inputs[3].value}</td><td>${inputs[4].value}</td>
+    <td><button class="btn-small">Edit</button><button class="btn-small">Delete</button></td>`;
+    table.appendChild(row);
+    e.target.reset();
+  });
+
+  // Add Supplier
+  document.getElementById('supplierForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const table = document.getElementById('supplierTable').querySelector('tbody');
+    const inputs = e.target.querySelectorAll('input');
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${inputs[0].value}</td><td>${inputs[1].value}</td><td>${inputs[2].value}</td><td>${inputs[3].value}</td>
+    <td><button class="btn-small">Edit</button><button class="btn-small">Delete</button></td>`;
+    table.appendChild(row);
+    e.target.reset();
+  });
+
+  
+</script>
+
+</body>
+</html>
