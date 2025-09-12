@@ -6,3 +6,6 @@ pydantic
 passlib[bcrypt]
 python-jose[cryptography]
 python-dotenv
+pymysql==1.1.0
+python-multipart==0.0.6
+python-jose[cryptography]==3.3.0
