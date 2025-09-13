@@ -2,12 +2,8 @@ from pydantic import BaseModel
 from enum import Enum
 from typing import List, Optional
 from datetime import datetime
+from models.purchase_order import OrderStatus
 
-class OrderStatus(str, Enum):
-    draft = "Draft"
-    sent = "Sent"
-    received = "Received"
-    closed = "Closed"
 
 class OrderItem(BaseModel):
     sku: str

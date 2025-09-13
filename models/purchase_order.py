@@ -3,9 +3,10 @@ from sqlalchemy.orm import relationship
 from database import Base
 from enum import Enum as PyEnum
 from datetime import datetime
+from enum import Enum
 
 
-class OrderStatus(PyEnum):
+class OrderStatus(str, Enum):
     draft = "Draft"
     sent = "Sent"
     received = "Received"
