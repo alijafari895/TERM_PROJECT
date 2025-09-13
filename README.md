@@ -180,6 +180,10 @@ SaleItem: id, sale_id, sku, quantity, price
 
 هر سفارش دریافتی امتیاز تأمین‌کننده را به‌روزرسانی می‌کند:
 
+ران با داکر:
+docker build -t inventory_app .
+docker run -p 8000:8000 inventory_app
+
 𝑠
 𝑐
 𝑜
