@@ -4,7 +4,7 @@ from database import Base
 from enum import Enum as PyEnum
 from datetime import datetime
 from enum import Enum
-
+from sqlalchemy import Column, Enum as SqlEnum
 
 class OrderStatus(str, Enum):
     draft = "Draft"
@@ -13,12 +13,13 @@ class OrderStatus(str, Enum):
     closed = "Closed"
 
 
+
 class PurchaseOrder(Base):
     __tablename__ = "purchase_orders"
 
     id = Column(Integer, primary_key=True, index=True)
     supplier_id = Column(Integer, ForeignKey("suppliers.id"), nullable=False)
-    status = Column(Enum(OrderStatus), default=OrderStatus.draft, nullable=False)
+    status = Column(SqlEnum(OrderStatus), default=OrderStatus.draft, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     received_at = Column(DateTime, nullable=True)
     delivery_time_days = Column(Integer, nullable=True)
